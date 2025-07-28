@@ -16,9 +16,10 @@ In my past roles as a Frontend Engineer, I've often seen project managers and ot
 I wrote a Figma Plugin that extracts frames from Figma, and passes the frame to a GenAI model (GPT-4o) to generate a title, description, acceptance criteria and implementation scope for the ticket. If you're pleased with the generated data, the plugin also creates a ticket within a task management board (e.g Trello) in the board and column of your choosing. 
 
 ## Todo
-Charge Returning Customers
-Add Comprehensive Tests
-Implement Transaction Dashboard to see all of the transactions in your laravel app
+- [ ] Setup nx to manage the web, plugin, and backend projects as a monorepo.
+- [ ] Begin implementing E2E test to establish a happy path for users. 
+- [ ] Fix TS errors across projects.
+- [ ] Create documentation across child projects.
 
 ## Contributing
 Please feel free to fork this package and contribute by submitting a pull request to enhance the functionalities.
