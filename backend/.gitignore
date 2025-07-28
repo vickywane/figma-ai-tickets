@@ -1,0 +1,10 @@
+node_modules
+dist
+env.ts
+.env
+**/.env
+./functions/.env
+./functions/.temp
+
+functions/.env
+functions/.temp
