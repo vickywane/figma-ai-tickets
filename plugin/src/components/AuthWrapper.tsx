@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { createSupbaseClient } from "../clients/supabase";
-import { SET_USER_AUTH, SET_USER_CLIENT_AUTH } from "../consts/messages";
+import { LOGOUT_USER, SET_USER_AUTH, SET_USER_CLIENT_AUTH } from "../consts/messages";
 
 import useUserStore from "../stores/user";
-
+import { AuthEvents } from "../consts/events";
 const supabase = createSupbaseClient();
 
 const AuthWrapper = ({ children }) => {
@@ -22,12 +22,12 @@ const AuthWrapper = ({ children }) => {
       });
     }
   };
- 
+
   useEffect(() => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (_event === "SIGNED_IN" && session) {
+      if (_event === AuthEvents.SIGNED_IN && session) {
         parent.postMessage(
           {
             pluginMessage: {
@@ -40,35 +40,58 @@ const AuthWrapper = ({ children }) => {
           },
           "*"
         );
- 
+
         setSession(session);
         setUser(session.user);
+      }
+
+      if (_event === AuthEvents.SIGNED_OUT) {
+        parent.postMessage(
+          {
+            pluginMessage: {
+              type: LOGOUT_USER,
+              data: null,
+            },
+          },
+          "*"
+        );
+
+        setSession(null);
+        setUser(null);
       }
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [supabase]);
 
   if (!session) {
     return (
-      <div className="p-8" >
-        <Auth
-          providers={[]}
-          supabaseClient={supabase}
-          appearance={{
-            theme: ThemeSupa,
-            style: {
-              input: {
-                height: "40px",
-                fontSize: "14px",
-                padding: "0 .5rem",
-              }, 
-              button: {
-                height: "40px",
-              }
-            },
-          }}
-        />
+      <div className="flex h-full items-center px-8">
+        <div className="w-full">
+          <h1 className="text-center mb-4 font-semibold">
+            Figma Tickets Helper
+          </h1>
+          <Auth
+            providers={[]}
+            supabaseClient={supabase}
+            appearance={{
+              theme: ThemeSupa,
+              style: {
+                input: {
+                  height: "40px",
+                  fontSize: "12px",
+                  padding: "0 .5rem",
+                },
+                label: {
+                  fontSize: "13px",
+                },
+                button: {
+                  height: "40px",
+                },
+              },
+            }}
+          />
+        </div>
       </div>
     );
   }
