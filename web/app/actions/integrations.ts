@@ -1,25 +1,32 @@
 "use server";
 
-import { createSupabaseServerClient } from "@/utils/supabase/server";
 import { IntegrationDTO } from "../data/DTOs";
 import { PostgrestError } from "@supabase/supabase-js";
-
-const API_BASE_URL = process.env.API_BASE_URL;
-const ACCESS_TOKEN = process.env.FUNCTIONS_ACCESS_TOKEN;
+import { createSupabaseServerClient } from "@/utils/supabase/server";
 
 export const getIntegrationsURL = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/integration?type=trello`, {
-      headers: {
-        Authorization: `Bearer ${ACCESS_TOKEN}`,
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Failed to fetch redirect URL");
-    }
-    const { data } = await response.json();
+    const supabase = await createSupabaseServerClient();
 
-    return data;
+    // const t = supabase.auth.getUser()
+
+    // const test = await supabase.auth.getUser()
+
+    // console.log("Test user:", test);
+
+    const { data: functionData, error } = await supabase.functions.invoke(
+      "integration",
+      {
+        method: "GET",
+      }
+    ); 
+
+    // if (error) {
+    //   console.error("Error invoking auth function:", error);
+    //   return;
+    // }
+    
+    // return functionData;
   } catch (error) {
     console.error("Error fetching redirect URL:", error);
   }

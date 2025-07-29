@@ -1,0 +1,5 @@
+const MOCK = { 
+  message:
+    '### Description\nImplement the \'Life As A Human\' design section as shown in the provided image. The design features a split layout with an image on the left and text content on the right.\n\n### Acceptance Criteria\n- The left side of the layout should display an image of a bridge in a forest setting.\n- The right side should contain the following text elements:\n - Title: "Life As A Human" with special characters "<" and ">" on either side.\n - Description: "I work as a Frontend Engineer and also an advocate for Cloud Engineering through written articles on Cloud Services as a Technical Author."\n- Ensure the text is styled to match the design, with the title in bold and larger font size.\n- The layout should be responsive and maintain the split design on various screen sizes.\n\n### More Information\n- Consider using CSS Flexbox or Grid for the layout to ensure responsiveness.\n- Pay attention to the typography and spacing to match the design closely.\n- Ensure the image is optimized for web use to maintain performance.',
+  title: "Implement 'Life As A Human' Design Section",
+};

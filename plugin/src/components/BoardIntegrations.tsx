@@ -18,12 +18,12 @@ const BoardIntegrations = ({ integrations }: { integrations: any[] }) => {
         console.error("No session available to launch integration.");
         return;
       }
-      
-      window.open(
-        `${INTEGRATION_STORE_URL}/${session.access_token}/${session.refresh_token}`,
-        "_blank"
-      );
-    } catch (error) {}
+
+      const url = `${INTEGRATION_STORE_URL}/${session.access_token}/${session.refresh_token}`;
+      window.open(url, "_blank");
+    } catch (error) {
+      console.error("Error launching integration store:", error);
+    }
   };
 
   return (
