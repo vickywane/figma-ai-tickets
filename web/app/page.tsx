@@ -21,7 +21,7 @@ const getData = async () => {
   return {
     user: user.claims,
     integrations,
-    redirectURL,
+    redirectURL
   };
 };
 
@@ -32,7 +32,7 @@ export default async function Page() {
     <div>
       <Header user={user} />
 
-      <div className=" bg-slate-100 items-center flex flex-col justify-center min-h-screen">
+       <div className=" bg-slate-100 items-center flex flex-col justify-center min-h-screen">
         <Home
           {...{
             user,
