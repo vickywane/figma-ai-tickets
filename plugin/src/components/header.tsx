@@ -3,7 +3,6 @@ import { FiUser } from "react-icons/fi";
 
 import useUserStore from "../stores/user";
 import { createSupbaseClient } from "../clients/supabase";
-import { LOGOUT_USER } from "../consts/messages";
 import BoardIntegrations from "./BoardIntegrations";
 
 // TODO: share types with the integration-web-store
@@ -14,15 +13,6 @@ const Header = ({ integrations }: { integrations: any[] }) => {
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-
-      parent.postMessage(
-        {
-          pluginMessage: {
-            type: LOGOUT_USER,
-          },
-        },
-        "*"
-      );
     } catch (error) {
       console.error("Error during logout:", error);
     }
