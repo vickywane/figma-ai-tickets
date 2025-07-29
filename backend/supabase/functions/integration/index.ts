@@ -32,7 +32,7 @@ app.get("/integration", async (context) => {
       }),
     };
 
-    return new Response(JSON.stringify({ data: { url } }), {
+    return new Response(JSON.stringify({ url }), {
       headers: CORS_HEADERS,
     });
   } catch (error) {

@@ -8,12 +8,6 @@ export const getIntegrationsURL = async () => {
   try {
     const supabase = await createSupabaseServerClient();
 
-    // const t = supabase.auth.getUser()
-
-    // const test = await supabase.auth.getUser()
-
-    // console.log("Test user:", test);
-
     const { data: functionData, error } = await supabase.functions.invoke(
       "integration",
       {
@@ -21,12 +15,12 @@ export const getIntegrationsURL = async () => {
       }
     ); 
 
-    // if (error) {
-    //   console.error("Error invoking auth function:", error);
-    //   return;
-    // }
+    if (error) {
+      console.error("Error invoking integration redirect function:", error);
+      return;
+    }
     
-    // return functionData;
+    return functionData;
   } catch (error) {
     console.error("Error fetching redirect URL:", error);
   }
