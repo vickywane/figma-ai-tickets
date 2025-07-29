@@ -1,35 +1,36 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { getUserFromAuthHeader } from "../libs/supabase.ts";
+import { Hono } from "jsr:@hono/hono";
+
 import { CORS_HEADERS } from "../consts.ts";
 import { generateAuthURL } from "../libs/trello.ts";
 
-Deno.serve((req) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, {
-      status: 204,
-      headers: CORS_HEADERS,
-    });
-  }
+const app = new Hono();
 
+// TODO: awaiting saving integration details via POST requests
+// app.post("/integration", async (c) => {
+//   const { name } = await c.req.json();
+//   return new Response(`Hello ${name}!`);
+// });
+
+// app.get("/integration/:type", (context) => {
+
+app.get("/integration", async (context) => {
   try {
-    const searchParams = new URL(req.url).searchParams;
-    const type = searchParams.get("type");
+    const user = await getUserFromAuthHeader(context);
 
-    if (!type) {
-      return new Response(JSON.stringify({ error: "Type is required" }), {
+    if (!user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
         headers: CORS_HEADERS,
-        status: 400,
+        status: 403,
       });
     }
 
-    let url = "";
-
-    switch (type) {
-      case "trello": {
-        url = generateAuthURL({
-          redirectUrl: Deno.env.get("INTEGRATIONS_WEB_STORE") || ""
-        });
-      }
-    }
+    const url = {
+      trello: generateAuthURL({
+        redirectUrl: Deno.env.get("INTEGRATIONS_WEB_STORE") || "",
+      }),
+    };
 
     return new Response(JSON.stringify({ data: { url } }), {
       headers: CORS_HEADERS,
@@ -43,3 +44,5 @@ Deno.serve((req) => {
     });
   }
 });
+
+Deno.serve(app.fetch);
