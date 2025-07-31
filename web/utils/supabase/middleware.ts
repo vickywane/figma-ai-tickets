@@ -29,22 +29,18 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  const tokens = request.nextUrl
-    .clone()
-    .pathname.split("/")
-    .filter((val) => val);
+  // NOTE: removing `getClaims()`  causes supabase not to persist auth state
+  const { data: authClaim } = await supabase.auth.getClaims();
 
-  if (tokens && tokens[0] && tokens[1]) {
+  const url = request.nextUrl;
+  const access_token = url.searchParams.get("access_token");
+  const refresh_token = url.searchParams.get("refresh_token");
+ 
+  if (access_token && refresh_token) {
     await supabase.auth.setSession({
-      refresh_token: tokens[1],
-      access_token: tokens[0],
-    });
-
-    // TODO: clean up the URL after setting the session & remove the tokens
-    // const url = request.nextUrl.clone()
-    // url.pathname = '/boy'
-    // url.search = ''
-    // NextResponse.redirect(url)
+      refresh_token,
+      access_token,
+    }); 
   }
 
   // refreshing the auth token

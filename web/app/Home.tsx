@@ -122,7 +122,7 @@ export default function Home({ user, integrations, redirectURL }: Props) {
       <ul className="grid gap-6 px-6 my-4">
         <li>
           <Integration
-            redirectURL={redirectURL?.url}
+            redirectURL={redirectURL?.url?.trello}
             integration={trelloIntegration}
             name="Trello"
             user={user}

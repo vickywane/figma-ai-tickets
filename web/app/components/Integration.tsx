@@ -12,7 +12,6 @@ import {
   updateIntegrationBoard,
 } from "../actions/integrations";
 import { JwtPayload } from "@supabase/supabase-js";
-import { createSupbaseClient } from "@/utils/supabase/client";
 
 type Props = {
   name: any;
@@ -35,9 +34,6 @@ const IntegrationElementList = {
   Monday: <CgMonday className="text-base text-[#d6d6d6]" />,
 };
 
-const TRELLO_API_KEY = "b6e2cc63aac6cc8ed573e108139567f4";
-const TRELLO_API_ENDPOINT = "https://api.trello.com/1";
-
 export default function Integration({
   name,
   user,
@@ -45,7 +41,6 @@ export default function Integration({
   integration,
   redirectURL,
 }: Props) {
-  const supabase = createSupbaseClient();
   const [allBoards, setAllBoards] = useState<Board[]>([]);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -77,25 +72,6 @@ export default function Integration({
     await updateIntegrationBoard(id, integration?.id, name);
   };
 
-  const handleRedirect = async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    const params = new URLSearchParams({
-      response_type: "code",
-      key: TRELLO_API_KEY,
-      scope: "read,write",
-      return_url: `http://localhost:3001/${session?.access_token}/${session?.refresh_token}`,
-      callback_method: "fragment",
-      expiration: "never",
-    });
-
-    const constructedURL = `${TRELLO_API_ENDPOINT}/authorize?${params.toString()}`;
-
-    window.open(constructedURL, "_blank");
-  };
-
   return (
     <div>
       <div className="flex justify-between ">
@@ -124,13 +100,12 @@ export default function Integration({
               </button>
             ) : (
               <button
-                // disabled={!redirectURL}
-                onClick={() => handleRedirect(redirectURL)}
+                disabled={!redirectURL}
                 className="flex gap-1 items-center font-sans bg-blue-500 text-xs text-white px-2 py-1 rounded"
               >
-                {/* <a className="flex gap-1 items-center" href={redirectURL}> */}
-                <FiPlus /> Add Integration
-                {/* </a> */}
+                <a className="flex gap-1 items-center" href={redirectURL}>
+                  <FiPlus /> Add Integration
+                </a>
               </button>
             )}
           </div>

@@ -15,11 +15,10 @@ const BoardIntegrations = ({ integrations }: { integrations: any[] }) => {
       } = await supabase.auth.getSession();
 
       if (!session) {
-        console.error("No session available to launch integration.");
-        return;
+        return console.error("No session available to launch integration.");
       }
 
-      const url = `${INTEGRATION_STORE_URL}/${session.access_token}/${session.refresh_token}`;
+      const url = `${INTEGRATION_STORE_URL}?access_token=${session.access_token}&refresh_token=${session.refresh_token}`;
       window.open(url, "_blank");
     } catch (error) {
       console.error("Error launching integration store:", error);
