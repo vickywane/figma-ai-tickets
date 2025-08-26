@@ -9,7 +9,7 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
-    "@netlify/vite-plugin": "^2.5.5",
+    "@netlify/vite-plugin-react-router": "^1.0.1",
     "@react-router/node": "^7.7.1",
     "@react-router/serve": "^7.7.1",
     "@supabase/auth-ui-react": "^0.4.7",
@@ -24,7 +24,6 @@
     "react-toastify": "^11.0.5"
   },
   "devDependencies": {
-    "@netlify/remix-adapter": "^2.6.1",
     "@react-router/dev": "^7.7.1",
     "@tailwindcss/vite": "^4.1.4",
     "@types/node": "^20",
