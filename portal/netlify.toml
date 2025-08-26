@@ -1,0 +1,14 @@
+[build]
+command = "npm run build"
+publish = "build/client"
+
+[dev]
+command = "npm run dev"
+framework = "vite"
+
+[[headers]]
+for = "/build/*"
+
+[headers.values]
+
+"Cache-Control" = "public, max-age=31560000, immutable"
