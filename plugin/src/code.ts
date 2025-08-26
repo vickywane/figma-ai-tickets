@@ -55,7 +55,7 @@ figma.ui.onmessage = async (msg) => {
     }
  
     const frame = selection[0] as FrameNode;
- 
+
     try { 
       const frameData = await frame.exportAsync({ format: "PNG" });
       const base64 = figma.base64Encode(frameData);
