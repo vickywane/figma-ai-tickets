@@ -1,20 +1,14 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from "../../env";
 
-let client: SupabaseClient | null = null;
+const SUPABASE_URL = import.meta.env.VITE_PUBLIC_SUPABASE_URL;
+const SUPABASE_API_KEY = import.meta.env.VITE_PUBLIC_SUPABASE_API_KEY;
 
 export const createSupbaseClient = () => {
-  if (client) {
-    return client;
-  }
-
-  client = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
+  return createClient(SUPABASE_URL, SUPABASE_API_KEY, {
     auth: {
       debug: false,
     },
   });
-
-  return client;
 };
 
 export const getUserIntegrations = async (userId: string) => {

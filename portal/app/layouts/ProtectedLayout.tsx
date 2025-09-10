@@ -17,18 +17,16 @@ function extractSearchParams(url: string) {
   }
 }
 
+// TODO: loader is not reading supabase auth properly
 export async function loader({ request }) {
   const { supabase, headers } = createServerClient(request);
   const urlData = extractSearchParams(request.url);
-
-  await supabase.auth.getClaims();
 
   if (urlData.access_token && urlData.refresh_token) {
     await supabase.auth.setSession({
       refresh_token: urlData.refresh_token,
       access_token: urlData.access_token,
     });
-
     return data(null, { headers });
   }
 
@@ -44,7 +42,7 @@ export async function loader({ request }) {
 export default function ProtectedLayout() {
   return (
     <div>
-      <Outlet />
+      <Outlet />{" "}
     </div>
   );
 }

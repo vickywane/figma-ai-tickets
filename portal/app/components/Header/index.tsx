@@ -10,7 +10,7 @@ export default function Header({ user }: { user: any }) {
 
   const handleLogout = async () => {
     await signOut();
-    navigate("/auth");
+    navigate("/");
   };
 
   return (

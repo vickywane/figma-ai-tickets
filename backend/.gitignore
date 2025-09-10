@@ -6,5 +6,7 @@ env.ts
 ./functions/.env
 ./functions/.temp
 
+supabase/.temp
+./supabase/.temp
 functions/.env
 functions/.temp

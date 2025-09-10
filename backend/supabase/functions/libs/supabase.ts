@@ -1,13 +1,27 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { CORS_HEADERS } from "../consts.ts";
+import { createClient, User } from "https://esm.sh/@supabase/supabase-js@2";
+import { type Context } from "jsr:@hono/hono";
 
-export const createSupabaseClient = () =>
+// console.log({
+//   url: Deno.env.get("SUPABASE_URL"),
+//   key: Deno.env.get("SUPABASE_ANON_KEY"),
+// });
+
+export const createSupabaseClient = (context: Context) =>
   createClient(
     Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_ANON_KEY")!
+    Deno.env.get("SUPABASE_ANON_KEY")!,
+    // {
+    //   global: {
+    //     headers: {
+    //       Authorization: context.req.header("Authorization") ?? "",
+    //     },
+    //   },
+    // }
   );
 
-export const getUserFromAuthHeader = async (context) => {
+export const getUserFromAuthHeader = async (
+  context: Context
+): Promise<User | null> => {
   try {
     const authorization = context.req.header("Authorization");
 
@@ -15,28 +29,29 @@ export const getUserFromAuthHeader = async (context) => {
       throw new Error("Authorization header is missing");
     }
 
-    const supabase = createSupabaseClient();
+    const token = authorization?.replace("Bearer ", "");
+
+    console.log("TOKEN =>", token)
+
+    if (!token) {
+      throw new Error("Token is missing from auth header");
+    }
+
+    const supabase = createSupabaseClient(context);
 
     const {
       data: { user },
       error,
-    } = await supabase.auth.getUser(authorization?.replace("Bearer ", ""));
+    } = await supabase.auth.getUser(token);
 
     if (error) {
-      return new Response(
-        JSON.stringify({
-          message: "err getting user from auth headers",
-          error,
-        }),
-        {
-          headers: CORS_HEADERS,
-          status: 403,
-        }
-      );
+      throw new Error(JSON.stringify(error));
     }
 
     return user;
   } catch (error) {
     console.error("Error getting user from auth header:", error);
+
+    return null;
   }
 };

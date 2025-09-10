@@ -2,9 +2,12 @@ import { FiSettings } from "react-icons/fi";
 import { useEffect, useMemo, useState } from "react";
 import { ToastContainer } from "react-toastify";
 
-import { useNavigate } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import { extractFragmentFromUrl } from "../../utils/extract-fragment";
-import { createIntegration } from "../../actions/integrations";
+import {
+  createIntegration,
+  exchangeIntegrationCode,
+} from "../../actions/integrations";
 import { SuccessBanner } from "../../components/ui/SucessBanner";
 import { type IntegrationDTO } from "../../types/DTOs";
 import { type JwtPayload } from "@supabase/supabase-js";
@@ -94,6 +97,11 @@ export default function Index({ user, integrations, redirectURL }: Props) {
     [allIntegrations]
   );
 
+  const linearIntegration = useMemo(
+    () => allIntegrations?.find((item) => item?.name === "Linear"),
+    [allIntegrations]
+  );
+
   return (
     <div className="flex justify-center">
       <div className="shadow-lg bg-white rounded-lg w-[400px]">
@@ -126,6 +134,15 @@ export default function Index({ user, integrations, redirectURL }: Props) {
               integration={trelloIntegration}
               name="Trello"
               user={user}
+            />
+          </li>
+
+          <li>
+            <Integration
+              name="Linear"
+              user={user}
+              integration={linearIntegration}
+              redirectURL={redirectURL?.url?.linear}
             />
           </li>
 

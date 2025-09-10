@@ -5,7 +5,7 @@ import {
   DISABLE_GENERATE_TASK,
   GENERATE_TASK_DETAILS,
   SET_TASK_DETAILS,
-} from "../consts/messages"; 
+} from "../consts/messages";
 import { Spinner } from "../components/spinner";
 import useUserStore from "../stores/user";
 import Header from "../components/header";
@@ -15,10 +15,10 @@ import { FrameSelection } from "../components/FrameSelection";
 import { EmptyIntegration } from "../components/EmptyIntegration";
 
 type FrameState = {
-  isValid: boolean; 
+  isValid: boolean;
   name: string;
 };
- 
+
 const initialFrameState = {
   isValid: true,
   name: "",
@@ -32,7 +32,7 @@ const Home = () => {
 
   const user = useUserStore((state) => state.user);
 
-  const [userIntegrations, setUserIntegration] = useState(null); 
+  const [userIntegrations, setUserIntegration] = useState(null);
   const supabase = createSupbaseClient();
 
   onmessage = (event) => {
@@ -60,7 +60,13 @@ const Home = () => {
   const emitGenerateTaskDetails = () => {
     setLoader(true);
     parent.postMessage(
-      { pluginMessage: { type: GENERATE_TASK_DETAILS, user: user.id } },
+      {
+        pluginMessage: {
+          type: GENERATE_TASK_DETAILS,
+          integration: "Linear",
+          user: user?.id,
+        },
+      },
       "*"
     );
   };
@@ -74,7 +80,7 @@ const Home = () => {
           data: {
             ...detailsData,
             columnId: detailsData?.boardList[0]?.id,
-            user: user.id,
+            user: user?.id,
           },
         },
       },
@@ -109,7 +115,7 @@ const Home = () => {
         {
           event: "*",
           schema: "public",
-          table: "integrations"
+          table: "integrations",
         },
         (payload) => {
           if (payload.eventType === "INSERT" && payload.new) {

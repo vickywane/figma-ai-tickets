@@ -3,6 +3,7 @@ import DashboardPage from "../components/Dashboard";
 import Header from "../components/Header";
 import { AuthProvider } from "~/contexts/AuthContext";
 import {
+  exchangeIntegrationCode,
   getIntegrationsURL,
   getUserIntegrations,
 } from "~/actions/integrations";
@@ -18,8 +19,20 @@ export async function loader({ request }) {
     return { user: null, integrations: [] };
   }
 
-  const redirectURL = await getIntegrationsURL();
-  const { integrations } = await getUserIntegrations(user?.id);
+  const url = new URL(request.url);
+  const code = url.searchParams.get("code");
+
+  if (code) {
+    const { data, error } = await exchangeIntegrationCode(request, {
+      token: code as string,
+    });
+
+    
+  }
+
+  const redirectURL = await getIntegrationsURL(request);
+
+  const { integrations } = await getUserIntegrations(request, user?.id);
 
   return { user, integrations, redirectURL };
 }

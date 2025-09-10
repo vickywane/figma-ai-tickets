@@ -1,4 +1,5 @@
-import { API_KEY, BASE_API_URL } from "../../env";
+const SUPABASE_API_URL = import.meta.env.VITE_PUBLIC_SUPABASE_API_URL;
+const API_KEY = import.meta.env.VITE_PUBLIC_SUPABASE_API_KEY;
 
 type FetchClient = {
   data: Record<string, string>;
@@ -10,7 +11,7 @@ export const fetchClient = async (
   { data, method = "GET" }: FetchClient
 ) => {
   try {
-    const request = await fetch(`${BASE_API_URL}/${endpoint}`, {
+    const request = await fetch(`${SUPABASE_API_URL}/${endpoint}`, {
       method,
       body: data && JSON.stringify(data),
       headers: {
@@ -21,6 +22,6 @@ export const fetchClient = async (
 
     return await request.json();
   } catch (error) {
-    console.error(`network err : ${error}`);
+    console.error(JSON.stringify(error));
   }
 };

@@ -5,6 +5,7 @@ import { SiJira, SiAsana, SiGithub } from "react-icons/si";
 import { CgMonday } from "react-icons/cg";
 import { AiOutlineDisconnect } from "react-icons/ai";
 import { toast } from "react-toastify";
+import { SiLinear } from "react-icons/si";
 
 import {
   getTrelloBoards,
@@ -29,6 +30,7 @@ type Board = {
 const IntegrationElementList = {
   Trello: <FiTrello className="text-base text-[#d6d6d6]" />,
   Jira: <SiJira className="text-base text-[#d6d6d6]" />,
+  Linear: <SiLinear className="text-base text-[#d6d6d6]" />,
   Asana: <SiAsana className="text-base text-[#d6d6d6]" />,
   "Github Boards": <SiGithub className="text-base text-[#d6d6d6]" />,
   Monday: <CgMonday className="text-base text-[#d6d6d6]" />,
@@ -36,7 +38,6 @@ const IntegrationElementList = {
 
 export default function Integration({
   name,
-  user,
   disabled = false,
   integration,
   redirectURL,

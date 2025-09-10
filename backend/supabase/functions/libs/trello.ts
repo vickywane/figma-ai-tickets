@@ -44,15 +44,15 @@ export const createTask = async ({ listId, title, content, token }: Task) => {
     return e;
   }
 };
- 
-export const generateAuthURL = ({
+
+export const generateTrelloAuthURL = ({
   redirectUrl,
   state,
 }: {
   redirectUrl: string;
   state?: any;
 }) => {
-  const params = new URLSearchParams({
+  const trelloParams = new URLSearchParams({
     response_type: "code",
     key: TRELLO_API_KEY,
     scope: "read,write",
@@ -62,10 +62,10 @@ export const generateAuthURL = ({
   });
 
   if (state) {
-    params.append("state", JSON.stringify(state));
+    trelloParams.append("state", JSON.stringify(state));
   }
 
-  return `${TRELLO_API_ENDPOINT}/authorize?${params.toString()}`;
+  return `${TRELLO_API_ENDPOINT}/authorize?${trelloParams.toString()}`;
 };
 
 export const retrieveTaskBoards = async (
