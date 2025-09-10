@@ -3,32 +3,34 @@ import { getUserFromAuthHeader } from "../libs/supabase.ts";
 import { Hono } from "jsr:@hono/hono";
 
 import { CORS_HEADERS } from "../consts.ts";
-import { generateAuthURL } from "../libs/trello.ts";
+import { generateTrelloAuthURL } from "../libs/trello.ts";
+import { generateLinearAuthURL } from "../libs/linear.ts";
 
 const app = new Hono();
 
-// TODO: awaiting saving integration details via POST requests
-// app.post("/integration", async (c) => {
-//   const { name } = await c.req.json();
-//   return new Response(`Hello ${name}!`);
-// });
-
-// app.get("/integration/:type", (context) => {
-
 app.get("/integration", async (context) => {
+  const redirectUrl = Deno.env.get("INTEGRATIONS_WEB_STORE");
+
+  if (!redirectUrl) {
+    throw new Error("INTEGRATIONS_WEB_STORE environment missing");
+  }
+
   try {
     const user = await getUserFromAuthHeader(context);
 
     if (!user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      return new Response(JSON.stringify({ eror: "Unauthorized" }), {
         headers: CORS_HEADERS,
         status: 403,
       });
     }
 
     const url = {
-      trello: generateAuthURL({
-        redirectUrl: Deno.env.get("INTEGRATIONS_WEB_STORE") || "",
+      trello: generateTrelloAuthURL({
+        redirectUrl,
+      }),
+      linear: generateLinearAuthURL({
+        redirectUrl,
       }),
     };
 

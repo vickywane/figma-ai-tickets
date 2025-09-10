@@ -1,8 +1,15 @@
 import { FaTrello } from "react-icons/fa6";
 import { FiPlus } from "react-icons/fi";
+import { SiLinear } from "react-icons/si";
 
 import { createSupbaseClient } from "../clients/supabase";
-import { INTEGRATION_STORE_URL } from "../../env";
+
+const INTEGRATION_STORE_URL = import.meta.env.VITE_PUBLIC_INTEGRATION_STORE_URL;
+
+const IntegrationIcons = {
+  trello: <FaTrello className="text-xs" />,
+  linear: <SiLinear className="text-xs" />,
+};
 
 // TODO: share types with the integration-web-store
 const BoardIntegrations = ({ integrations }: { integrations: any[] }) => {
@@ -42,7 +49,7 @@ const BoardIntegrations = ({ integrations }: { integrations: any[] }) => {
               key={integration.id}
               className="flex items-center gap-1 text-xs text-gray-300 hover:text-white"
             >
-              <FaTrello className="text-xs" />
+              {IntegrationIcons[integration.name.toLowerCase()]}
               {integration.name}
             </li>
           ))

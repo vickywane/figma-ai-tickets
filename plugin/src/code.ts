@@ -15,8 +15,8 @@ import {
 import { fetchClient } from "./utils/fetch";
 
 figma.showUI(__html__, {
-  height: 400,
-  width: 400,
+  height: 500,
+  width: 450,
 });
 
 figma.on("run", async () => {
@@ -51,26 +51,27 @@ figma.ui.onmessage = async (msg) => {
 
     if (selection.length !== 1 || selection[0].type !== "FRAME") {
       figma.notify("Please select a frame.");
-      return; 
+      return;
     }
- 
+
     const frame = selection[0] as FrameNode;
 
-    try { 
+    try {
       const frameData = await frame.exportAsync({ format: "PNG" });
       const base64 = figma.base64Encode(frameData);
       const image = `data:image/png;base64,${base64}`;
 
       const request = await fetchClient("/generate-task", {
-        data: { 
+        data: {
           image,
           user: msg.user,
+          integration: "Linear",
         },
         method: "POST",
       });
 
       figma.notify("Task breakdown of your figma has been generated");
- 
+
       return figma.ui.postMessage({
         type: SET_TASK_DETAILS,
         data: request?.data,
@@ -78,6 +79,10 @@ figma.ui.onmessage = async (msg) => {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  if (msg.type === "COPY_TO_CLIPBOARD") {
+    return figma.notify("Copied to clipboard!");
   }
 
   if (msg.type === SET_USER_AUTH) {
@@ -92,7 +97,7 @@ figma.ui.onmessage = async (msg) => {
     } catch (error) {
       console.error("Error setting user auth:", error);
     }
-  } 
+  }
 
   if (msg.type === CREATE_TASK) {
     try {

@@ -5,7 +5,6 @@ import useUserStore from "../stores/user";
 import { createSupbaseClient } from "../clients/supabase";
 import BoardIntegrations from "./BoardIntegrations";
 
-// TODO: share types with the integration-web-store
 const Header = ({ integrations }: { integrations: any[] }) => {
   const user = useUserStore((state) => state.user);
   const supabase = createSupbaseClient();

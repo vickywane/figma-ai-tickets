@@ -1,12 +1,11 @@
-"use server";
-
 import { type IntegrationDTO } from "../types/DTOs";
 import { PostgrestError } from "@supabase/supabase-js";
 import { createClient } from "../lib/supabase/client";
+import { createServerClient } from "../lib/supabase/server";
 
-export const getIntegrationsURL = async () => {
+export const getIntegrationsURL = async (request) => {
   try {
-    const supabase = createClient();
+    const { supabase } = createServerClient(request);
 
     const { data: functionData, error } = await supabase.functions.invoke(
       "integration",
@@ -16,13 +15,33 @@ export const getIntegrationsURL = async () => {
     );
 
     if (error) {
-      console.error("Error invoking integration redirect function:", error);
+      console.error(error);
       return;
     }
 
     return functionData;
   } catch (error) {
-    console.error("Error fetching redirect URL:", error);
+    console.error(error);
+  }
+};
+
+export const exchangeIntegrationCode = async (
+  request,
+  { token }: { token: string }
+) => {
+  try {
+    const { supabase } = createServerClient(request);
+
+    const { data, error } = await supabase.functions.invoke("callback", {
+      method: "POST",
+      body: JSON.stringify({ token }),
+    });
+
+    return { data, error };
+  } catch (error) {
+    console.error("Error exchanging integration code:", error);
+
+    return { data: null, error };
   }
 };
 
@@ -50,8 +69,6 @@ export const createIntegration = async ({
       .select("*")
       .single();
 
-    console.log(boardData);
-
     if (error || boardError) {
       console.error("Error creating integration:", { error, boardError });
     }
@@ -63,28 +80,27 @@ export const createIntegration = async ({
 };
 
 export const getUserIntegrations = async (
+  request,
   userId: string
 ): Promise<{
   integrations: IntegrationDTO[];
-  queryError: PostgrestError | null;
+  queryError: any;
 }> => {
   try {
-    const client = createClient();
+    const { supabase } = createServerClient(request);
 
-    const queryData = await client
+    const { data, error } = await supabase
       .from("integrations")
       .select("*")
       .eq("created_by", userId);
 
-    const { data, error: queryError } = queryData;
-
-    if (queryError) {
-      console.error("Error fetching user integrations:", queryError);
+    if (error) {
+      console.error("Error fetching integrations:", error);
     }
 
-    return { integrations: data || [], queryError };
+    return { integrations: data || [], error };
   } catch (error) {
-    console.error("Error fetching user integrations:", error);
+    console.error("Error fetching integrations:", error);
 
     return { integrations: [], queryError: error as PostgrestError };
   }

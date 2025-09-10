@@ -15,9 +15,9 @@ Deno.serve(async (req) => {
   try {
     const body = await req.json();
 
-    if (!body.image || !body.user) {
+    if (!body.image) {
       return new Response(
-        JSON.stringify({ error: "image or user in request body" }),
+        JSON.stringify({ error: "no image or user in request body" }),
         {
           headers: CORS_HEADERS,
           status: 400,
@@ -25,40 +25,45 @@ Deno.serve(async (req) => {
       );
     }
 
-    const supabase = createSupabaseClient();
+    // const supabase = createSupabaseClient();
 
     // TODO: explore getting user from the session.
-    const queryData = await supabase
-      .schema("public")
-      .from("integrations")
-      .select("*")
-      .eq("created_by", body.user);
+    // const queryData = await supabase
+    //   .schema("public")
+    //   .from("integrations")
+    //   .select("*")
+    //   .eq("created_by", body.user);
 
-    const { data, error: queryError } = queryData;
+    // const { data, error: queryError } = queryData;
 
-    if (queryError) {
-      console.error("Error getting integrations:", queryError);
+    // if (queryError) {
+    //   console.error("Error getting integrations:", queryError);
 
-      return new Response(JSON.stringify({ error: queryError }), {
-        headers: CORS_HEADERS,
-        status: 500,
-      });
-    }
+    //   return new Response(JSON.stringify({ error: queryError }), {
+    //     headers: CORS_HEADERS,
+    //     status: 500,
+    //   });
+    // }
 
     // TODO: await support for multiple integrations.
-    const trelloIntegration = data?.find((integration) => integration.name === "Trello");
+    // const trelloIntegration = data?.find(
+    //   (integration) => integration.name === body.integration
+    // );
 
-    if (!trelloIntegration) {
-      return new Response(
-        JSON.stringify({ error: "Trello integration not found" }),
-        {
-          headers: CORS_HEADERS,
-          status: 404,
-        }
-      );
-    }
+    // if (!trelloIntegration) {
+    //   return new Response(
+    //     JSON.stringify({ error: "Trello integration not found" }),
+    //     {
+    //       headers: CORS_HEADERS,
+    //       status: 404,
+    //     }
+    //   );
+    // }
 
-    const boardList = await retrieveTaskBoards(trelloIntegration?.board, trelloIntegration?.tokens);
+    // const boardList = await retrieveTaskBoards(
+    //   trelloIntegration?.board,
+    //   trelloIntegration?.tokens
+    // );
     const object = await extractDetails(body?.image);
 
     if (!object) {
@@ -73,7 +78,11 @@ Deno.serve(async (req) => {
       );
     }
 
-    return new Response(JSON.stringify({ data: {...object, boardList} }), {
+    // return new Response(JSON.stringify({ data: { ...object, boardList } }), {
+    //   headers: CORS_HEADERS,
+    // });
+
+    return new Response(JSON.stringify({ data: { ...object } }), {
       headers: CORS_HEADERS,
     });
   } catch (error) {
