@@ -11,7 +11,8 @@
     "buildcode": "vite build --config vite.config.code.ts",
     "preview": "vite preview",
     "hmr": "vite",
-    "zip": "cross-env MODE=zip vite build"
+    "zip": "cross-env MODE=zip vite build",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "@supabase/auth-ui-react": "^0.4.7",

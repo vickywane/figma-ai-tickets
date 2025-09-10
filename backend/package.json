@@ -1,4 +1,12 @@
 {
+  "name": "backend",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Backend built'",
+    "dev": "echo 'Backend dev server started'",
+    "start": "echo 'Backend started'",
+    "clean": "rm -rf dist"
+  },
   "dependencies": {
     "simple-oauth2": "^5.1.0"
   },
