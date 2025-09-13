@@ -15,8 +15,72 @@ In my past roles as a Frontend Engineer, I've often seen project managers and ot
 
 I wrote a Figma Plugin that extracts frames from Figma, and passes the frame to a GenAI model (GPT-4o) to generate a title, description, acceptance criteria and implementation scope for the ticket. If you're pleased with the generated data, the plugin also creates a ticket within a task management board (e.g Trello) in the board and column of your choosing. 
 
+## Development Setup
+
+This project uses [Turborepo](https://turbo.build/repo) to manage the monorepo with the following packages:
+
+- **backend** - Node.js backend server
+- **portal** - React Router v7 web portal 
+- **plugin** - Figma plugin built with Vite/React
+- **web** - Next.js web application
+
+### Getting Started
+
+Install dependencies:
+```bash
+yarn install
+```
+
+### Available Scripts
+
+Run all packages in development mode:
+```bash
+yarn dev
+```
+
+Build all packages:
+```bash
+yarn build
+```
+
+Run linting across all packages:
+```bash
+yarn lint
+```
+
+Run type checking across all packages:
+```bash
+yarn typecheck
+```
+
+Start all built applications:
+```bash
+yarn start
+```
+
+Clean build artifacts:
+```bash
+yarn clean
+```
+
+### Individual Package Scripts
+
+You can also run scripts for individual packages:
+
+```bash
+# Run specific package
+yarn workspace backend dev
+yarn workspace portal dev
+yarn workspace plugin dev  
+yarn workspace web dev
+
+# Build specific package
+yarn workspace web build
+yarn workspace plugin build
+```
+
 ## Todo
-- [ ] Setup nx to manage the web, plugin, and backend projects as a monorepo.
+- [x] Setup Turborepo to manage the web, plugin, portal, and backend projects as a monorepo.
 - [ ] Begin implementing E2E test to establish a happy path for users. 
 - [ ] Fix TS errors across projects.
 - [ ] Create documentation across child projects.
